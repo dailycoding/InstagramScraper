@@ -10,11 +10,11 @@ namespace InstagramScraper.Classes.Models
 
         public string FullName { get; set; }
 
-        // public bool IsPrivate { get; set; }
+        public bool IsPrivate { get; set; }
 
         public string ProfilePicUrl { get; set; }
 
-        // public bool IsVerified { get; set; }
+        public bool IsVerified { get; set; }
 
         // public bool HasAnonymousProfilePicture { get; set; }
 
@@ -28,9 +28,9 @@ namespace InstagramScraper.Classes.Models
 
         public string Biography { get; set; }
 
-        // public string ExternalUrl { get; set; }
+        public string ExternalUrl { get; set; }
 
-        // public string ExternalLynxUrl { get; set; }
+        public string ExternalUrlLinkshimmed { get; set; }
 
         // public string ReelAutoArchive { get; set; }
 

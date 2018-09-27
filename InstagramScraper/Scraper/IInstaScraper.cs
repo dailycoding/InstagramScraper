@@ -59,7 +59,7 @@ namespace InstagramScraper.Scraper
         // /// </summary>
         // Task<IResult<FbSearchPlaceResponse>> SearchPlace(string searchQuery, int count = 5);
 
-        
+
         // /// <summary>
         // ///     Reset challenge asynchronously
         // /// </summary>
@@ -79,7 +79,7 @@ namespace InstagramScraper.Scraper
         // ///     Send verify code asynchronously
         // /// </summary>
         // Task<IResult<InstaResetChallenge>> SendVerifyCode(string securityCode);
-        
+
         // /// <summary>
         // ///     2-Factor Authentication Login using a verification code
         // ///     Before call this method, please run LoginAsync first.
@@ -579,12 +579,12 @@ namespace InstagramScraper.Scraper
         // /// <returns></returns>
         // Task<IResult<InstaUserInfo>> GetUserInfoByIdAsync(long pk);
 
-        // /// <summary>
-        // ///     Gets the user extended information (followers count, following count, bio, etc) by username.
-        // /// </summary>
-        // /// <param name="username">Username, like "instagram"</param>
-        // /// <returns></returns>
-        // Task<IResult<InstaUserInfo>> GetUserInfoByUsernameAsync(string username);
+        /// <summary>
+        ///     Gets the user extended information (followers count, following count, bio, etc) by username.
+        /// </summary>
+        /// <param name="username">Username, like "instagram"</param>
+        /// <returns></returns>
+        Task<IResult<InstaUserInfo>> GetUserInfoByUsernameAsync(string username);
 
         // /// <summary>
         // /// Send link as a message
@@ -593,7 +593,7 @@ namespace InstagramScraper.Scraper
         // /// <param name="recipients">Array of recipients, user pk like "123123123"</param>
         // /// <returns>Affected threads</returns>
         // Task<IResult<InstaDirectInboxThreadList>> SendLinkMessage(InstaMessageLink message, params long[] recipients);
-        
+
         // /// <summary>
         // /// Send link as a message
         // /// </summary>

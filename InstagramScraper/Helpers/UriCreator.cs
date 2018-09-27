@@ -29,11 +29,10 @@ namespace InstagramScraper.Helpers
 
         public static Uri GetUserInfoByUsernameUri(string username)
         {
-            throw new NotImplementedException();
-            // if (!Uri.TryCreate(BaseInstagramUri, string.Format(InstaApiConstants.GET_USER_INFO_BY_USERNAME, username),
-            //     out var instaUri))
-            //     throw new Exception("Cant create user info by username URI");
-            // return instaUri;
+            if (!Uri.TryCreate(BaseInstagramUri, string.Format(Constants.GET_USER_INFO_BY_USERNAME, username),
+                out var instaUri))
+                throw new Exception("Cant create user info by username URI");
+            return instaUri;
         }
 
         // public static Uri GetUserFeedUri(string maxId = "")

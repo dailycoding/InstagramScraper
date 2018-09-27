@@ -112,5 +112,11 @@ namespace InstagramScraper.Classes
         //         return new Result<T>(false, default(T), resultInfo);
         //     }
         // }
+
+        public static IResult<T> UnExpectedResponse<T>(HttpResponseMessage response)
+        {
+            var resultInfo = new ResultInfo(ResponseType.UnExpectedResponse, $"Unexpected response status: {response.StatusCode}", String.Empty);
+            return new Result<T>(false, default(T), resultInfo);
+        }
     }
 }

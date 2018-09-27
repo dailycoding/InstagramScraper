@@ -7,7 +7,7 @@ namespace InstagramScraper.Scraper.Processors
     public interface IUserProcessor
     {
         // Task<IResult<InstaMediaList>> GetUserMediaAsync(long username, PaginationParameters paginationParameters);
-        Task<IResult<InstaUser>> GetUserAsync(string username);
+        //Task<IResult<InstaUser>> GetUserAsync(string username);
         // Task<IResult<InstaUserShortList>> SearchUsersAsync(string searchPattern);
         // Task<IResult<InstaCurrentUser>> GetCurrentUserAsync();
 
@@ -25,6 +25,6 @@ namespace InstagramScraper.Scraper.Processors
         // Task<IResult<InstaFriendshipStatus>> UnBlockUserAsync(long userId);
         // Task<IResult<InstaFriendshipStatus>> GetFriendshipStatusAsync(long userId);
         // Task<IResult<InstaUserInfo>> GetUserInfoByIdAsync(long pk);
-        // Task<IResult<InstaUserInfo>> GetUserInfoByUsernameAsync(string username);
+        Task<IResult<InstaUserInfo>> GetUserInfoByUsernameAsync(string username);
     }
 }

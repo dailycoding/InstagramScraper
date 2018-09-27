@@ -23,11 +23,8 @@ namespace InstagramScraper.Scraper.Builder
         /// <returns>
         ///     Scraper instance
         /// </returns>
-        /// <exception cref="ArgumentNullException">User auth data must be specified</exception>
         public IInstaScraper Build()
         {
-            if (_user == null)
-                throw new ArgumentNullException($"User auth data must be specified");
             if (_httpClient == null)
                 _httpClient = new HttpClient(_httpHandler) {BaseAddress = new Uri(Constants.WEB_URL)};
 

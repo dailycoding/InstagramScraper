@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using InstagramScraper.Classes;
-// using InstagramScraper.Classes.Android.DeviceInfo;
 using InstagramScraper.Classes.Models;
-// using InstagramScraper.Classes.ResponseWrappers;
-// using InstagramScraper.Converters;
-// using InstagramScraper.Converters.Json;
+using InstagramScraper.Classes.ResponseWrappers;
+using InstagramScraper.Converters;
 using InstagramScraper.Helpers;
 using InstagramScraper.Logger;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace InstagramScraper.Scraper.Processors
 {
@@ -71,42 +71,41 @@ namespace InstagramScraper.Scraper.Processors
         //     }
         // }
 
-        public async Task<IResult<InstaUser>> GetUserAsync(string username)
-        {
-            // try
-            // {
-            //     var userUri = UriCreator.GetUserUri(username);
-            //     var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
-            //     request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_TIMEZONE,
-            //         InstaApiConstants.TIMEZONE_OFFSET.ToString()));
-            //     request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_COUNT, "1"));
-            //     request.Properties.Add(
-            //         new KeyValuePair<string, object>(InstaApiConstants.HEADER_RANK_TOKEN, _user.RankToken));
-            //     var response = await _httpRequestProcessor.SendAsync(request);
-            //     var json = await response.Content.ReadAsStringAsync();
-            //     if (response.StatusCode != HttpStatusCode.OK)
-            //         return Result.UnExpectedResponse<InstaUser>(response, json);
-            //     var userInfo = JsonConvert.DeserializeObject<InstaSearchUserResponse>(json);
-            //     var user = userInfo.Users?.FirstOrDefault(u => u.UserName == username);
-            //     if (user == null)
-            //     {
-            //         var errorMessage = $"Can't find this user: {username}";
-            //         _logger?.LogInfo(errorMessage);
-            //         return Result.Fail<InstaUser>(errorMessage);
-            //     }
+        // public async Task<IResult<InstaUser>> GetUserAsync(string username)
+        // {
+        //     // try
+        //     // {
+        //     //     var userUri = UriCreator.GetUserUri(username);
+        //     //     var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
+        //     //     request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_TIMEZONE,
+        //     //         InstaApiConstants.TIMEZONE_OFFSET.ToString()));
+        //     //     request.Properties.Add(new KeyValuePair<string, object>(InstaApiConstants.HEADER_COUNT, "1"));
+        //     //     request.Properties.Add(
+        //     //         new KeyValuePair<string, object>(InstaApiConstants.HEADER_RANK_TOKEN, _user.RankToken));
+        //     //     var response = await _httpRequestProcessor.SendAsync(request);
+        //     //     var json = await response.Content.ReadAsStringAsync();
+        //     //     if (response.StatusCode != HttpStatusCode.OK)
+        //     //         return Result.UnExpectedResponse<InstaUser>(response, json);
+        //     //     var userInfo = JsonConvert.DeserializeObject<InstaSearchUserResponse>(json);
+        //     //     var user = userInfo.Users?.FirstOrDefault(u => u.UserName == username);
+        //     //     if (user == null)
+        //     //     {
+        //     //         var errorMessage = $"Can't find this user: {username}";
+        //     //         _logger?.LogInfo(errorMessage);
+        //     //         return Result.Fail<InstaUser>(errorMessage);
+        //     //     }
 
-            //     if (user.Pk < 1)
-            //         Result.Fail<InstaUser>("Pk is incorrect");
-            //     var converter = ConvertersFabric.Instance.GetUserConverter(user);
-            //     return Result.Success(converter.Convert());
-            // }
-            // catch (Exception exception)
-            // {
-            //     _logger?.LogException(exception);
-            //     return Result.Fail<InstaUser>(exception.Message);
-            // }
-            throw new NotImplementedException();
-        }
+        //     //     if (user.Pk < 1)
+        //     //         Result.Fail<InstaUser>("Pk is incorrect");
+        //     //     var converter = ConvertersFabric.Instance.GetUserConverter(user);
+        //     //     return Result.Success(converter.Convert());
+        //     // }
+        //     // catch (Exception exception)
+        //     // {
+        //     //     _logger?.LogException(exception);
+        //     //     return Result.Fail<InstaUser>(exception.Message);
+        //     // }
+        // }
 
 
         // public async Task<IResult<InstaUserShortList>> SearchUsersAsync(string searchPattern)
@@ -368,23 +367,24 @@ namespace InstagramScraper.Scraper.Processors
 
         private async Task<IResult<InstaUserInfo>> GetUserInfoAsync(Uri userUri)
         {
-            throw new NotImplementedException();
-            // try
-            // {
-            //     var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri, _deviceInfo);
-            //     var response = await _httpRequestProcessor.SendAsync(request);
-            //     var json = await response.Content.ReadAsStringAsync();
-            //     if (response.StatusCode != HttpStatusCode.OK)
-            //         return Result.UnExpectedResponse<InstaUserInfo>(response, json);
-            //     var userInfo = JsonConvert.DeserializeObject<InstaUserInfoContainerResponse>(json);
-            //     var converter = ConvertersFabric.Instance.GetUserInfoConverter(userInfo);
-            //     return Result.Success(converter.Convert());
-            // }
-            // catch (Exception exception)
-            // {
-            //     _logger?.LogException(exception);
-            //     return Result.Fail<InstaUserInfo>(exception.Message);
-            // }
+            try
+            {
+                var request = HttpHelper.GetDefaultRequest(HttpMethod.Get, userUri);
+                var response = await _httpRequestProcessor.SendAsync(request);
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return Result.UnExpectedResponse<InstaUserInfo>(response);
+
+                var html = await response.Content.ReadAsStringAsync();
+                var json = GetSharedDataJsonFromHtml(html);
+                var userInfo = json.SelectToken("entry_data.ProfilePage[0].graphql").ToObject<InstaUserInfoContainerResponse>();
+                var converter = ConvertersFabric.Instance.GetUserInfoConverter(userInfo);
+                return Result.Success(converter.Convert());
+            }
+            catch (Exception exception)
+            {
+                _logger?.LogException(exception);
+                return Result.Fail<InstaUserInfo>(exception.Message);
+            }
         }
 
         // private async Task<IResult<InstaFriendshipStatus>> FollowUnfollowUserInternal(long userId, Uri instaUri)
@@ -459,5 +459,17 @@ namespace InstagramScraper.Scraper.Processors
         //         return Result.Success(instaUserListResponse);
         //     return Result.UnExpectedResponse<InstaUserListShortResponse>(response, json);
         // }
+
+        private JObject GetSharedDataJsonFromHtml(string html)
+        {
+            string pattern = @"window._sharedData = (\{[^;]*\});";
+            Match m = Regex.Match(html, pattern, RegexOptions.IgnoreCase);
+            if (m.Success)
+            {
+                return JObject.Parse(m.Groups[1].Value);
+            }
+
+            return null;
+        }
     }
 }

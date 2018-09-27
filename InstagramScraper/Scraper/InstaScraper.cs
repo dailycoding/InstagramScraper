@@ -38,6 +38,8 @@ namespace InstagramScraper.Scraper
             _user = user;
             _logger = logger;
             _httpRequestProcessor = httpRequestProcessor;
+
+            InvalidateProcessors();
         }
 
         // /// <summary>
@@ -113,19 +115,19 @@ namespace InstagramScraper.Scraper
         //     return await _mediaProcessor.GetMediaByIdAsync(mediaId);
         // }
 
-        /// <summary>
-        ///     Get user info by its user name asynchronously
-        /// </summary>
-        /// <param name="username">Username</param>
-        /// <returns>
-        ///     <see cref="T:InstagramScraper.Classes.Models.InstaUser" />
-        /// </returns>
-        public async Task<IResult<InstaUser>> GetUserAsync(string username)
-        {
-            // ValidateUser();
-            // ValidateLoggedIn();
-            return await _userProcessor.GetUserAsync(username);
-        }
+        ///// <summary>
+        /////     Get user info by its user name asynchronously
+        ///// </summary>
+        ///// <param name="username">Username</param>
+        ///// <returns>
+        /////     <see cref="T:InstagramScraper.Classes.Models.InstaUser" />
+        ///// </returns>
+        //public async Task<IResult<InstaUser>> GetUserAsync(string username)
+        //{
+        //    // ValidateUser();
+        //    // ValidateLoggedIn();
+        //    //return await _userProcessor.GetUserAsync(username);
+        //}
 
         // /// <summary>
         // ///     Search users asynchronously
@@ -217,17 +219,17 @@ namespace InstagramScraper.Scraper
         //     return await _userProcessor.GetUserInfoByIdAsync(pk);
         // }
 
-        // /// <summary>
-        // ///     Gets the user extended information (followers count, following count, bio, etc) by username.
-        // /// </summary>
-        // /// <param name="username">Username, like "instagram"</param>
-        // /// <returns></returns>
-        // public async Task<IResult<InstaUserInfo>> GetUserInfoByUsernameAsync(string username)
-        // {
-        //     ValidateUser();
-        //     ValidateLoggedIn();
-        //     return await _userProcessor.GetUserInfoByUsernameAsync(username);
-        // }
+        /// <summary>
+        ///     Gets the user extended information (followers count, following count, bio, etc) by username.
+        /// </summary>
+        /// <param name="username">Username, like "instagram"</param>
+        /// <returns></returns>
+        public async Task<IResult<InstaUserInfo>> GetUserInfoByUsernameAsync(string username)
+        {
+            //ValidateUser();
+            //ValidateLoggedIn();
+            return await _userProcessor.GetUserInfoByUsernameAsync(username);
+        }
 
         // /// <summary>
         // /// Send link as a message
@@ -910,22 +912,23 @@ namespace InstagramScraper.Scraper
         //     ValidateLoggedIn();
         //     return await _hashtagProcessor.GetHashtagInfo(tagname);
         // }
-        
+
+
         // #region private part
 
-        // private void InvalidateProcessors()
-        // {
+        private void InvalidateProcessors()
+        {
         //     _hashtagProcessor = new HashtagProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
         //     _locationProcessor = new LocationProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
         //     _collectionProcessor = new CollectionProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
         //     _mediaProcessor = new MediaProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-        //     _userProcessor = new UserProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
+            _userProcessor = new UserProcessor(_user, _httpRequestProcessor, _logger);
         //     _storyProcessor = new StoryProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
         //     _commentProcessor = new CommentProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
         //     _profileProcessor = new UserProfileProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
         //     _messagingProcessor = new MessagingProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
         //     _feedProcessor = new FeedProcessor(_deviceInfo, _user, _httpRequestProcessor, _logger);
-        // }
+        }
 
         // private void ValidateUser()
         // {
