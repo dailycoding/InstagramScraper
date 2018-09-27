@@ -22,6 +22,11 @@ namespace InstagramScraper.Examples.Samples
             var user = await _instaScraper.GetUserInfoByUsernameAsync(userId);
 
             Console.WriteLine($"User details for '{userId}'");
+            Console.WriteLine($"Fullname: {user.Value.FullName}");
+            Console.WriteLine($"Profile Picture: {user.Value.ProfilePicUrl}");
+            Console.WriteLine($"Followers: {user.Value.FollowerCount}");
+            Console.WriteLine($"Followings: {user.Value.FollowingCount}");
+            Console.WriteLine($"External Link: {user.Value.ExternalUrl}");
         }
     }
 }
